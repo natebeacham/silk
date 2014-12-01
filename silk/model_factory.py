@@ -92,7 +92,7 @@ class RequestModelFactory(object):
 
     def body(self):
         content_type, char_set = self.content_type()
-        raw_body = self.request.body
+        raw_body = self.request.read()
         if char_set:
             try:
                 raw_body = raw_body.decode(char_set)

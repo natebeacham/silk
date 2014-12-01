@@ -1,8 +1,8 @@
 import logging
+import datetime
 import traceback
 
 from django.db.models.sql import EmptyResultSet
-from django.utils import timezone
 
 from silk.collector import DataCollector
 from silk.config import SilkyConfig
@@ -39,13 +39,13 @@ def execute_sql(self, *args, **kwargs):
     if _should_wrap(sql_query):
         query_dict = {
             'query': sql_query,
-            'start_time': timezone.now(),
+            'start_time': datetime.datetime.now(),
             'traceback': tb
         }
         try:
             return self._execute_sql(*args, **kwargs)
         finally:
-            query_dict['end_time'] = timezone.now()
+            query_dict['end_time'] = datetime.datetime.now()
             request = DataCollector().request
             if request:
                 query_dict['request'] = request

@@ -3,7 +3,6 @@ from datetime import timedelta, datetime
 from math import floor
 import random
 
-from django.utils import timezone
 from django.test import TestCase
 import pytz
 
@@ -28,13 +27,13 @@ class TestRequestFilters(TestCase):
         requests = [mock_suite.mock_request() for _ in range(0, 10)]
         n = 0
         for r in requests:
-            r.start_time = timezone.now() - timedelta(seconds=n)
+            r.start_time = datetime.datetime.now() - timedelta(seconds=n)
             r.save()
             n += 1
         requests = models.Request.objects.filter(SecondsFilter(5))
         for r in requests:
             dt = r.start_time
-            seconds = self._time_stamp(timezone.now()) - self._time_stamp(dt)
+            seconds = self._time_stamp(datetime.datetime.now()) - self._time_stamp(dt)
             self.assertTrue(seconds < 6)  # 6 to give a bit of leeway in case takes too long
 
     def test_view_name_filter(self):

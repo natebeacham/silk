@@ -1,10 +1,11 @@
-from collections import Counter
 import json
+import datetime
+
+from collections import Counter
 
 from django.db import models
 from django.db.models import DateTimeField, TextField, CharField, ForeignKey, IntegerField, BooleanField, F, \
     ManyToManyField, OneToOneField, FloatField
-from django.utils import timezone
 from django.db import transaction
 import sqlparse
 
@@ -45,7 +46,7 @@ class Request(models.Model):
     raw_body = TextField(blank=True, default='')
     body = TextField(blank=True, default='')
     method = CharField(max_length=10)
-    start_time = DateTimeField(default=timezone.now, db_index=True)
+    start_time = DateTimeField(default=datetime.datetime.now)
     view_name = CharField(max_length=300, db_index=True, blank=True, default='')
     end_time = DateTimeField(null=True, blank=True)
     time_taken = FloatField(blank=True, null=True)
@@ -142,7 +143,7 @@ class SQLQueryManager(models.Manager):
 
 class SQLQuery(models.Model):
     query = TextField()
-    start_time = DateTimeField(null=True, blank=True, default=timezone.now)
+    start_time = DateTimeField(null=True, blank=True, default=datetime.datetime.now)
     end_time = DateTimeField(null=True, blank=True)
     time_taken = FloatField(blank=True, null=True)
     request = ForeignKey('Request', related_name='queries', null=True, blank=True, db_index=True)
@@ -201,7 +202,7 @@ class SQLQuery(models.Model):
 
 class BaseProfile(models.Model):
     name = CharField(max_length=300, blank=True, default='')
-    start_time = DateTimeField(default=timezone.now)
+    start_time = DateTimeField(default=datetime.datetime.now)
     end_time = DateTimeField(null=True, blank=True)
     request = ForeignKey('Request', null=True, blank=True, db_index=True)
     time_taken = FloatField(blank=True, null=True)

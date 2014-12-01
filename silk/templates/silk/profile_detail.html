@@ -2,7 +2,6 @@
 {% load filters %}
 {% load nav %}
 {% load inclusion %}
-{% load staticfiles %}
 
 {% block js %}
     {{ block.super }}
@@ -10,7 +9,7 @@
 
 {% block style %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'silk/css/summary.css' %}">
+    <link rel="stylesheet" href="/media/silk/css/summary.css">
     <style>
         #query-info-div {
             margin-top: 15px;

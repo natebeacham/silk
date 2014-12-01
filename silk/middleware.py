@@ -1,10 +1,11 @@
-import logging
 import random
+import logging
+import datetime
 
 from django.core.urlresolvers import reverse, NoReverseMatch
 
 from django.db.models.sql.compiler import SQLCompiler
-from django.utils import timezone
+from django.db import IntegrityError
 
 from silk.collector import DataCollector
 
@@ -91,11 +92,15 @@ class SilkyMiddleware(object):
             collector.stop_python_profiler()
             silk_request = collector.request
             if silk_request:
-                silk_response = ResponseModelFactory(response).construct_response_model()
-                silk_response.save()
-                silk_request.end_time = timezone.now()
-                collector.finalise()
-                silk_request.save()
+                try:
+                    silk_response = ResponseModelFactory(response).construct_response_model()
+                except IntegrityError:
+                    raise #collector.finalise()
+                else:
+                    silk_response.save()
+                    silk_request.end_time = datetime.datetime.now()
+                    collector.finalise()
+                    silk_request.save()
             else:
                 Logger.error('No request model was available when processing response. Did something go wrong in process_request/process_view?')
 

@@ -1,6 +1,6 @@
 {% extends 'silk/base/root_base.html' %}
+{% load url from future %}
 {% load inclusion %}
-{% load staticfiles %}
 {% block menu %}
     {% root_menu request %}
 {% endblock %}
@@ -89,7 +89,7 @@
                 <table id="filter-table">
                     <tr>
                         <td>
-                            <img id="filter-image" src="{% static 'silk/filter2.png' %}">
+                            <img id="filter-image" src="/media/silk/filter2.png">
 
                         </td>
                         <td id="filter-cell">
@@ -157,15 +157,15 @@
                     <div class="desc">Profiles</div>
                 </div>
                 <div class="summary-cell">
-                    <div class="num"><span class="numeric">{{ avg_overall_time | floatformat:0 }}<span class="unit">ms</span></span></div>
+                    <div class="num"><span class="numeric">{{ avg_overall_time }}<span class="unit">ms</span></span></div>
                     <div class="desc">Avg. Time</div>
                 </div>
                 <div class="summary-cell">
-                    <div class="num"><span class="numeric">{{ avg_num_queries | floatformat:2 }}</span></div>
+                    <div class="num"><span class="numeric">{{ avg_num_queries }}</span></div>
                     <div class="desc">Avg. #Queries</div>
                 </div>
                 <div class="summary-cell">
-                    <div class="num"><span class="numeric">{{ avg_time_spent_on_queries |floatformat:0 }}<span class="unit">ms</span></span></div>
+                    <div class="num"><span class="numeric">{{ avg_time_spent_on_queries  }}<span class="unit">ms</span></span></div>
                     <div class="desc">Avg. DB Time</div>
                 </div>
             {% else %}

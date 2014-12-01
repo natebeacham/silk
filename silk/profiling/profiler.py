@@ -1,10 +1,10 @@
 import inspect
 import logging
 import time
+import datetime
 import traceback
 
 from django.conf import settings
-from django.utils import timezone
 import six
 
 from silk.collector import DataCollector
@@ -28,11 +28,11 @@ class silk_meta_profiler(object):
 
     def __enter__(self):
         if self._should_meta_profile:
-            self.start_time = timezone.now()
+            self.start_time = datetime.datetime.now()
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         if self._should_meta_profile:
-            end_time = timezone.now()
+            end_time = datetime.datetime.now()
             exception_raised = exc_type is not None
             if exception_raised:
                 Logger.error('Exception when performing meta profiling, dumping trace below')
@@ -51,9 +51,9 @@ class silk_meta_profiler(object):
             def wrapped_target(*args, **kwargs):
                 request = DataCollector().request
                 if request:
-                    start_time = timezone.now()
+                    start_time = datetime.datetime.now()
                     result = target(*args, **kwargs)
-                    end_time = timezone.now()
+                    end_time = datetime.datetime.now()
                     curr = request.meta_time or 0
                     request.meta_time = curr + _time_taken(start_time, end_time)
                 else:
@@ -105,7 +105,7 @@ class silk_profile(object):
                     'line_num': line_num,
                     'dynamic': self._dynamic,
                     'request': request,
-                    'start_time': timezone.now(),
+                    'start_time': datetime.datetime.now(),
                 }
         else:
             Logger.warn('Cannot execute silk_profile as silk is not installed correctly.')
@@ -125,7 +125,7 @@ class silk_profile(object):
                 start_time = None
                 exception_raised = exc_type is not None
                 self.profile['exception_raised'] = exception_raised
-                self.profile['end_time'] = timezone.now()
+                self.profile['end_time'] = datetime.datetime.now()
                 self._finalise_queries()
 
     def _silk_installed(self):
@@ -155,7 +155,7 @@ class silk_profile(object):
                         'file_path': file_path,
                         'line_num': line_num,
                         'dynamic': self._dynamic,
-                        'start_time': timezone.now(),
+                        'start_time': datetime.datetime.now(),
                         'request': DataCollector().request
                     }
                     self._start_queries()
@@ -166,7 +166,7 @@ class silk_profile(object):
                     raise
                 finally:
                     with silk_meta_profiler():
-                        self.profile['end_time'] = timezone.now()
+                        self.profile['end_time'] = datetime.datetime.now()
                         self._finalise_queries()
                 return result
 
